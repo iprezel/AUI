@@ -1,10 +1,9 @@
 package pl.mateusz.core;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -12,14 +11,25 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(exclude = "id")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "foods")
 public class Food implements Comparable<Food>, Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
+    @Id
     private UUID id;
-    private final String name;
-    private final int price;
-    private final int quantity;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "price")
+    private int price;
+    @Column(name = "quantity")
+    private int quantity;
     @ToString.Exclude
-    private final FoodCompany company;
+    @ManyToOne
+    @JoinColumn(name = "company")
+    private FoodCompany company;
 
     @Override
     public int compareTo(Food other) {

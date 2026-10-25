@@ -1,11 +1,10 @@
 package pl.mateusz.core;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
@@ -13,19 +12,28 @@ import java.util.*;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "companies")
 public class FoodCompany implements Serializable, Comparable<FoodCompany> {
+    @Serial
     private static final long serialVersionUID = 1L;
-    @Builder.Default
-    private final UUID id = UUID.randomUUID();
+    @Id
+    private UUID id;
     @EqualsAndHashCode.Include
-    private final String name;
+    @Column(name = "name")
+    private String name;
     @EqualsAndHashCode.Include
-    private final String nip;
+    @Column(name = "nip", unique = true)
+    private String nip;
     @EqualsAndHashCode.Include
-    private final boolean isPolish;
+    @Column(name = "is_polish")
+    private boolean isPolish;
     @ToString.Exclude
     @Builder.Default
-    private final List<Food> foods = new ArrayList<>();
+    @OneToMany(mappedBy = "company")
+    private List<Food> foods = new ArrayList<>();
 
     public void addFood(Food food) {
         foods.add(food);
