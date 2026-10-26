@@ -28,8 +28,8 @@ public class Food implements Comparable<Food>, Serializable {
     private int quantity;
     @ToString.Exclude
     @ManyToOne // Default is FetchType.LAZY;
-    @JoinColumn(name = "company")
-    private FoodCompany company;
+    @JoinColumn(name = "food_company")
+    private FoodCompany foodCompany;
 
     @Override
     public int compareTo(Food other) {

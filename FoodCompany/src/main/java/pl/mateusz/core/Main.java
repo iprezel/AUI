@@ -175,21 +175,21 @@ public class Main {
                 .name("Raspberries")
                 .price(15)
                 .quantity(200)
-                .company(legsad)
+                .foodCompany(legsad)
                 .build();
         legsad.addFood(raspberries);
         Food blueberries = Food.builder()
                 .name("Blueberries")
                 .price(10)
                 .quantity(300)
-                .company(legsad)
+                .foodCompany(legsad)
                 .build();
         legsad.addFood(blueberries);
         Food strawberry = Food.builder()
                 .name("Strawberry")
                 .price(7)
                 .quantity(400)
-                .company(legsad)
+                .foodCompany(legsad)
                 .build();
         legsad.addFood(strawberry);
         // ---  Meats ---
@@ -203,14 +203,14 @@ public class Main {
                 .name("Chicken Breast")
                 .price(25)
                 .quantity(1000)
-                .company(sokolow)
+                .foodCompany(sokolow)
                 .build();
         sokolow.addFood(chicken);
         Food steak = Food.builder()
                 .name("Beef Steak")
                 .price(50)
                 .quantity(1000)
-                .company(sokolow)
+                .foodCompany(sokolow)
                 .build();
         sokolow.addFood(steak);
         // ---  Sweets ---
@@ -224,14 +224,14 @@ public class Main {
                 .name("Ferrero Rocher")
                 .price(25)
                 .quantity(150)
-                .company(fererro)
+                .foodCompany(fererro)
                 .build();
         fererro.addFood(ferreroRocher);
         Food nutella = Food.builder()
                 .name("Nutella")
                 .price(20)
                 .quantity(350)
-                .company(fererro)
+                .foodCompany(fererro)
                 .build();
         fererro.addFood(nutella);
 

@@ -33,7 +33,7 @@ public class FoodCompany implements Serializable, Comparable<FoodCompany> {
     private boolean isPolish;
     @ToString.Exclude
     @Builder.Default
-    @OneToMany(mappedBy = "company") // Default is FetchType.LAZY;
+    @OneToMany(mappedBy = "foodCompany") // Default is FetchType.LAZY;
     private List<Food> foods = new ArrayList<>();
 
     public void addFood(Food food) {

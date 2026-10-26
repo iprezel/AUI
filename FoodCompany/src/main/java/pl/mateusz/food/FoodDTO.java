@@ -20,7 +20,7 @@ public class FoodDTO implements Comparable<FoodDTO>{
                 .name(food.getName())
                 .price(food.getPrice())
                 .quantity(food.getQuantity())
-                .foodCompany(food.getCompany() != null ? food.getCompany().getName() : "none")
+                .foodCompany(food.getFoodCompany() != null ? food.getFoodCompany().getName() : "none")
                 .build();
     }
 
