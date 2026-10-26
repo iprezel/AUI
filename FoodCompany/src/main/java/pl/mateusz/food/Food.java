@@ -1,11 +1,11 @@
-package pl.mateusz.core;
+package pl.mateusz.food;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.mateusz.company.FoodCompany;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.UUID;
 @Getter
 @ToString

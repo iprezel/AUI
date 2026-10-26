@@ -1,4 +1,4 @@
-package pl.mateusz.core;
+package pl.mateusz.food;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

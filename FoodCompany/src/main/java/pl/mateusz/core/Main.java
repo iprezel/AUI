@@ -1,5 +1,9 @@
 package pl.mateusz.core;
 
+import pl.mateusz.company.FoodCompany;
+import pl.mateusz.food.Food;
+import pl.mateusz.food.FoodDTO;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;

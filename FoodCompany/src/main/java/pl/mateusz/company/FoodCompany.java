@@ -1,7 +1,8 @@
-package pl.mateusz.core;
+package pl.mateusz.company;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.mateusz.food.Food;
 
 
 import java.io.Serial;

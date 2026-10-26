@@ -1,8 +1,7 @@
-package pl.mateusz.core;
+package pl.mateusz.food;
 
 import lombok.*;
 
-import java.util.Objects;
 @Getter
 @ToString
 @EqualsAndHashCode

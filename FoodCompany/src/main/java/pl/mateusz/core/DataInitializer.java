@@ -3,6 +3,9 @@ package pl.mateusz.core;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+import pl.mateusz.company.FoodCompany;
+import pl.mateusz.company.FoodCompanyService;
+import pl.mateusz.food.FoodService;
 
 import java.util.UUID;
 
