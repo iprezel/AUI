@@ -27,7 +27,7 @@ public class Food implements Comparable<Food>, Serializable {
     @Column(name = "quantity")
     private int quantity;
     @ToString.Exclude
-    @ManyToOne
+    @ManyToOne // Default is FetchType.LAZY;
     @JoinColumn(name = "company")
     private FoodCompany company;
 
