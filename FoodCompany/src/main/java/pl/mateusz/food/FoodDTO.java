@@ -27,9 +27,9 @@ public class FoodDTO implements Comparable<FoodDTO>{
     @Override
     public int compareTo(FoodDTO other) {
         int result = this.name.compareTo(other.name);
-        if (result == 0) {
-            result = this.foodCompany.compareTo(other.foodCompany);
-        }
+        if (result == 0) result = this.foodCompany.compareTo(other.foodCompany);
+        if (result == 0) result = Integer.compare(this.price, other.price);
+        if (result == 0) result = Integer.compare(this.quantity, other.quantity);
         return result;
     }
 

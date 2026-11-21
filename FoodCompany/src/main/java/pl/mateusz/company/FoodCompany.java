@@ -42,6 +42,9 @@ public class FoodCompany implements Serializable, Comparable<FoodCompany> {
 
     @Override
     public int compareTo(FoodCompany o) {
-        return this.name.compareTo(o.name);
+        int result =  this.name.compareTo(o.name);
+        if (result == 0) result = this.nip.compareTo(o.nip);
+        if (result == 0) result = Boolean.compare(this.isPolish, o.isPolish);
+        return result;
     }
 }

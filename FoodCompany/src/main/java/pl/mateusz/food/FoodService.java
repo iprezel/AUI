@@ -2,8 +2,10 @@ package pl.mateusz.food;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.mateusz.company.FoodCompany;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +24,18 @@ public class FoodService {
         return isNew;
     }
 
-    public void deleteFood(UUID foodID){
-        repository.findById(foodID).ifPresent(repository::delete);
+    public Optional<Food> findById(UUID id) {
+        return repository.findById(id);
     }
+
+    public List<Food> findByFoodCompany(FoodCompany company) {
+        return repository.findByFoodCompany(company);
+    }
+
+    public boolean deleteFood(UUID foodID) {
+        return repository.findById(foodID)
+                .map(food -> { repository.delete(food); return true; })
+                .orElse(false);
+    }
+
 }

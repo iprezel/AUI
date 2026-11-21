@@ -2,6 +2,7 @@ package pl.mateusz.core;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import pl.mateusz.company.FoodCompany;
 import pl.mateusz.company.FoodCompanyService;
@@ -10,38 +11,38 @@ import pl.mateusz.food.FoodService;
 import tools.jackson.databind.ObjectWriter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
-
+@ConditionalOnProperty(name = "app.cli.enabled", havingValue = "true", matchIfMissing = true)
 @Component
 @RequiredArgsConstructor
 public class AppCommandLineRunner implements CommandLineRunner {
     private final FoodService foodService;
     private final FoodCompanyService foodCompanyService;
-    //private final ObjectWriter objectWriter;
+    private final Scanner scanner = new Scanner(System.in);
 
     @Override
     public void run(String... args) throws Exception {
         boolean isRunning = true;
-        Scanner scanner = new Scanner(System.in);
         printMenu();
         while (isRunning){
-            printAlways();
-            switch(scanner.nextInt()){
-                case 1 -> printMenu();
-                case 2 -> printAllFoodCompanies();
-                case 3 -> printAllFood();
-                case 4 -> addFood(scanner);
-                case 5 -> deleteFood(scanner);
-                case 0 -> isRunning = false;
-                default -> System.out.println("Unrecognized command try again.");
+            System.out.println("-----------------");
+            switch (readLine("Enter your choice: ")) {
+                case "1" -> printMenu();
+                case "2" -> printAllFoodCompanies();
+                case "3" -> printAllFood();
+                case "4" -> addFood();
+                case "5" -> deleteFood();
+                case "0" -> { System.out.println("Bye!"); return; }
+                default -> System.out.println("Unrecognized command, try again.");
             }
         }
 
     }
-    public void printAlways(){
-        System.out.println("-----------------");
-        System.out.print("Enter your choice: ");
+    private String readLine(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
     }
     public void printMenu() {
         System.out.println("--- MAIN MENU ---");
@@ -52,47 +53,66 @@ public class AppCommandLineRunner implements CommandLineRunner {
         System.out.println("5 - Delete an existing element");
         System.out.println("0 - Stop the application");
     }
-    public void printAllFoodCompanies(){
+    public void printAllFoodCompanies() {
         List<FoodCompany> foodCompanyList = foodCompanyService.findAll().stream().toList();
         for(FoodCompany company: foodCompanyList){
             System.out.println(company);
         }
     }
-    public void printAllFood(){
+    public void printAllFood() {
         List<Food> foodList = foodService.findAll().stream().toList();
         for(Food food: foodList){
             System.out.println(food);
         }
     }
 
-    public void addFood(Scanner scanner){
-        System.out.print("Enter id: ");
-        UUID uuid = UUID.fromString(scanner.next());
-        System.out.print("Enter name: ");
-        String name = scanner.next();
-        int price = -1;
+    public void addFood() {
+        UUID id = readUuid("Enter id: ");
+        if (foodService.findById(id).isPresent()) {
+            System.out.println("Food with this id already exists.");
+            return;
+        }
+        String name;
         do{
-            System.out.print("Enter price(>=0): ");
-            price = scanner.nextInt();
-        }while(price<1);
-        int quantity = -1;
-        do{
-            System.out.print("Enter quantity(>=0): ");
-            quantity = scanner.nextInt();
-        }while(quantity<1);
-
+            name = readLine("Enter name: ");
+        }while(name.isEmpty());
+        int price = readInt("Enter price (>=1): ", 1);
+        int quantity = readInt("Enter quantity (>=1): ", 1);
         printAllFoodCompanies();
-        System.out.print("Select the category(write id): ");
-        UUID companyId = UUID.fromString(scanner.next());
-        foodService.saveFood(Food.builder().id(uuid).name(name).price(price).quantity(quantity).foodCompany(FoodCompany.builder().id(companyId).build()).build());
-        System.out.print("Item success added!");
+        Optional<FoodCompany> company = foodCompanyService.findById(readUuid("Select company (write id): "));
+        if (company.isEmpty()) {
+            System.out.println("No company with given id.");
+            return;
+        }
+        foodService.saveFood(Food.builder()
+                .id(id)
+                .name(name).price(price).quantity(quantity)
+                .foodCompany(company.get())
+                .build());
+        System.out.println("Food added!");
     }
 
-    public void deleteFood(Scanner scanner){
+    public void deleteFood() {
         printAllFood();
-        System.out.print("Select food to delete(write id): ");
-        UUID foodId = UUID.fromString(scanner.next());
-        foodService.deleteFood(foodId);
-        System.out.print("Item success deleted!");
+        UUID id = readUuid("Select food to delete (write id): ");
+        boolean deleted = foodService.deleteFood(id);
+        System.out.println(deleted ? "Food deleted!" : "No food with given id.");
+    }
+
+    private int readInt(String prompt, int min) {
+        while (true) {
+            try {
+                int v = Integer.parseInt(readLine(prompt));
+                if (v >= min) return v;
+            } catch (NumberFormatException ignored) { } //blok catch jest pusty bo sa dwa bledy mozliwe jeden w bloku catch drugi if
+            System.out.println("Enter an integer >= " + min + ".");
+        }
+    }
+
+    private UUID readUuid(String prompt) {
+        while (true) {
+            try { return UUID.fromString(readLine(prompt)); }
+            catch (IllegalArgumentException e) { System.out.println("Invalid UUID format."); }
+        }
     }
 }

@@ -246,7 +246,7 @@ public class Main {
         //z3
         Set<Food> allFoods = companies.stream().flatMap(food -> food.getFoods().stream()).collect(Collectors.toSet());
         System.out.println("\n[z3] All foods in one set");
-        allFoods.forEach(food -> System.out.println(food));
+        allFoods.stream().forEach(food -> System.out.println(food));
 
         //z4
         System.out.println("\n[z4] Foods filter, sorted, and print in one stream");
@@ -255,7 +255,7 @@ public class Main {
         //z5
         System.out.println("\n[z5] Transform DTO, sort natural order, collect into the List in one stream. Then print in secound stream");
         List<FoodDTO> foodDTO = allFoods.stream().map(FoodDTO::fromFood).sorted().toList();
-        foodDTO.forEach(food -> System.out.println(food));
+        foodDTO.stream().forEach(food -> System.out.println(food));
 
         //z6
         String filename = "categories.bin";

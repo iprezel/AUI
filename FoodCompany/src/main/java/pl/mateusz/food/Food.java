@@ -27,16 +27,16 @@ public class Food implements Comparable<Food>, Serializable {
     @Column(name = "quantity")
     private int quantity;
     @ToString.Exclude
-    @ManyToOne // Default is FetchType.LAZY;
+    @ManyToOne // Default is FetchType.Eager;
     @JoinColumn(name = "food_company")
     private FoodCompany foodCompany;
 
     @Override
     public int compareTo(Food other) {
         int result = this.name.compareTo(other.name);
-        if (result == 0) {
-            result = Integer.compare(this.price, other.price);
-        }
+        if (result == 0) result = Integer.compare(this.price, other.price);
+        if (result == 0) result = Integer.compare(this.quantity, other.quantity);
+        if (result == 0) result = this.foodCompany.compareTo(other.foodCompany);
         return result;
     }
 }
