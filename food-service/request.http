@@ -1,0 +1,30 @@
+# Firmy z DataInitializer
+@legsadId = 565e3bd3-d487-3ba8-b0b1-99e3391e0a64
+
+# Produkty z DataInitializer
+@raspberriesId = d4ef41a3-d1cf-39c1-9fc8-daa897c5b750
+@nutellaId = 671b8d93-f534-3460-9e5b-4d6dbf3b90f6
+
+# Nowe zasoby tworzone w tym pliku (UUID generuje klient)
+@wedelId = aaaaaaaa-0000-0000-0000-000000000001
+@chocolateId = bbbbbbbb-0000-0000-0000-000000000001
+
+# Identyfikator, który nie istnieje w bazie
+@missingId = 99999999-9999-9999-9999-999999999999
+
+
+#######################################################################
+# FIRMY (kategorie)
+#######################################################################
+
+### Pobranie wszystkiego jedzenia -> 200
+GET http://localhost:8082/api/foods
+
+### Pobranie produktow firmy LegSad -> 200
+GET http://localhost:8082/api/companies/{{legsadId}}/foods
+
+### Pobranie konkretnego produktu -> 200
+GET http://localhost:8082/api/foods/{{nutellaId}}
+
+### Usuniecie firmy z poziomu portu Produktow -> 404
+DELETE http://localhost:8082/api/companies/{{legsadId}}
