@@ -26,5 +26,5 @@ GET http://localhost:8082/api/companies/{{legsadId}}/foods
 ### Pobranie konkretnego produktu -> 200
 GET http://localhost:8082/api/foods/{{nutellaId}}
 
-### Usuniecie firmy z poziomu portu Produktow -> 404
+### Usuniecie firmy z poziomu portu Produktow -> 204
 DELETE http://localhost:8082/api/companies/{{legsadId}}

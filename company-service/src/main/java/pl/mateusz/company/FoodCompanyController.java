@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.mateusz.company.dto.GetFoodCompaniesResponse;
 import pl.mateusz.company.dto.GetFoodCompanyResponse;
 import pl.mateusz.company.dto.PutFoodCompanyRequest;
+import pl.mateusz.company.event.FoodCompanyEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FoodCompanyController {
     private final FoodCompanyService service;
+    private final FoodCompanyEventPublisher eventPublisher;
 
     @GetMapping
     public GetFoodCompaniesResponse getFoodCompanies(){
@@ -42,6 +44,9 @@ public class FoodCompanyController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build(); //409
         }
         boolean isNew = service.saveFoodCompany(company);
+        if (isNew) {
+            eventPublisher.companyCreated(id);
+        }
         return ResponseEntity
                 .status(isNew ? HttpStatus.CREATED : HttpStatus.OK)
                 .build();
@@ -50,6 +55,7 @@ public class FoodCompanyController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFoodCompany(@PathVariable UUID id) {
         if (service.deleteFoodCompany(id)) {
+            eventPublisher.companyDeleted(id);
             return ResponseEntity.noContent().build();       // 204
         }
         return ResponseEntity.notFound().build();            // 404
