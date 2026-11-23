@@ -21,8 +21,17 @@ public class FoodCompanyService {
         repository.save(foodCompany);
         return isNew;
     }
+    public Optional<FoodCompany> findByNip(String nip) {
+        return repository.findByNip(nip);
+    }
 
     public Optional<FoodCompany> findById(UUID id) {
         return repository.findById(id);
+    }
+
+    public boolean deleteFoodCompany(UUID foodCompanyID) {
+        return repository.findById(foodCompanyID)
+                .map(food -> { repository.delete(food); return true; })
+                .orElse(false);
     }
 }

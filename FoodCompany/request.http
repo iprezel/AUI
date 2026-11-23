@@ -1,0 +1,154 @@
+# Firmy z DataInitializer
+@legsadId = 565e3bd3-d487-3ba8-b0b1-99e3391e0a64
+
+# Produkty z DataInitializer
+@raspberriesId = d4ef41a3-d1cf-39c1-9fc8-daa897c5b750
+@nutellaId = 671b8d93-f534-3460-9e5b-4d6dbf3b90f6
+
+# Nowe zasoby tworzone w tym pliku (UUID generuje klient)
+@wedelId = aaaaaaaa-0000-0000-0000-000000000001
+@chocolateId = bbbbbbbb-0000-0000-0000-000000000001
+
+# Identyfikator, który nie istnieje w bazie
+@missingId = 99999999-9999-9999-9999-999999999999
+
+
+#######################################################################
+# FIRMY (kategorie)
+#######################################################################
+
+### Pobranie wszystkich firm → 200
+GET http://localhost:8080/api/companies
+
+### Pobranie jednej firmy → 200
+GET http://localhost:8080/api/companies/{{legsadId}}
+
+### Pobranie nieistniejącej firmy → 404
+GET http://localhost:8080/api/companies/{{missingId}}
+
+### Pobranie firmy z niepoprawnym UUID → 400
+GET http://localhost:8080/api/companies/abc
+
+### Utworzenie nowej firmy (UUID z adresu) → 201
+PUT http://localhost:8080/api/companies/{{wedelId}}
+Content-Type: application/json
+
+{
+  "name": "Wedel",
+  "nip": "5250008237",
+  "isPolish": true
+}
+
+### Aktualizacja istniejącej firmy, ten sam NIP → 200
+PUT http://localhost:8080/api/companies/{{wedelId}}
+Content-Type: application/json
+
+{
+  "name": "E. Wedel",
+  "nip": "5250008237",
+  "isPolish": true
+}
+
+### Sprawdzenie aktualizacji firmy → 200
+GET http://localhost:8080/api/companies/{{wedelId}}
+
+### Utworzenie firmy z NIP-em należącym do innej firmy (Legsad) → 409
+PUT http://localhost:8080/api/companies/aaaaaaaa-0000-0000-0000-000000000002
+Content-Type: application/json
+
+{
+  "name": "Kopia Legsadu",
+  "nip": "6912552643",
+  "isPolish": true
+}
+
+### Utworzenie firmy bez ciała żądania → 400
+PUT http://localhost:8080/api/companies/aaaaaaaa-0000-0000-0000-000000000003
+
+
+#######################################################################
+# PRODUKTY (elementy)
+#######################################################################
+
+### Pobranie wszystkich produktów → 200
+GET http://localhost:8080/api/foods
+
+### Pobranie jednego produktu → 200
+GET http://localhost:8080/api/foods/{{nutellaId}}
+
+### Pobranie nieistniejącego produktu → 404
+GET http://localhost:8080/api/foods/{{missingId}}
+
+### Pobranie produktów jednej firmy → 200
+GET http://localhost:8080/api/companies/{{legsadId}}/foods
+
+### Pobranie produktów pustej firmy (Wedel nie ma produktów) → 200 z pustą listą
+GET http://localhost:8080/api/companies/{{wedelId}}/foods
+
+### Pobranie produktów nieistniejącej firmy → 404
+GET http://localhost:8080/api/companies/{{missingId}}/foods
+
+### Dodanie nowego produktu do firmy Wedel → 201
+PUT http://localhost:8080/api/companies/{{wedelId}}/foods/{{chocolateId}}
+Content-Type: application/json
+
+{
+  "name": "Mleczna czekolada",
+  "price": 8,
+  "quantity": 120
+}
+
+### Aktualizacja produktu (zmiana ceny) → 200
+PUT http://localhost:8080/api/companies/{{wedelId}}/foods/{{chocolateId}}
+Content-Type: application/json
+
+{
+  "name": "Mleczna czekolada",
+  "price": 9,
+  "quantity": 120
+}
+
+### Sprawdzenie aktualizacji produktu → 200
+GET http://localhost:8080/api/foods/{{chocolateId}}
+
+### Firma Wedel ma teraz jeden produkt → 200
+GET http://localhost:8080/api/companies/{{wedelId}}/foods
+
+### Dodanie produktu do nieistniejącej firmy → 404
+PUT http://localhost:8080/api/companies/{{missingId}}/foods/bbbbbbbb-0000-0000-0000-000000000002
+Content-Type: application/json
+
+{
+  "name": "Produkt bez firmy",
+  "price": 1,
+  "quantity": 1
+}
+
+### Dodanie produktu bez ciała żądania → 400
+PUT http://localhost:8080/api/companies/{{wedelId}}/foods/bbbbbbbb-0000-0000-0000-000000000003
+
+### Usunięcie produktu → 204
+DELETE http://localhost:8080/api/foods/{{chocolateId}}
+
+### Ponowne usunięcie tego samego produktu → 404
+DELETE http://localhost:8080/api/foods/{{chocolateId}}
+
+### Sprawdzenie usunięcia produktu → 404
+GET http://localhost:8080/api/foods/{{chocolateId}}
+
+
+#######################################################################
+# USUWANIE FIRM (kaskadowo z produktami)
+#######################################################################
+
+### Usunięcie firmy Legsad razem z jej produktami → 204
+DELETE http://localhost:8080/api/companies/{{legsadId}}
+
+### Sprawdzenie usunięcia firmy → 404
+GET http://localhost:8080/api/companies/{{legsadId}}
+
+### Produkt usuniętej firmy też zniknął (Raspberries należały do Legsadu) → 404
+GET http://localhost:8080/api/foods/{{raspberriesId}}
+
+### Usunięcie nieistniejącej firmy → 404
+DELETE http://localhost:8080/api/companies/{{missingId}}
