@@ -2,6 +2,11 @@ package pl.mateusz.company.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import pl.mateusz.company.FoodCompany;
+import pl.mateusz.food.Food;
+
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @ToString
@@ -14,4 +19,13 @@ public class PutFoodCompanyRequest {
     private String nip;
     @JsonProperty("isPolish")
     private boolean polish;
+
+    public static FoodCompany from(PutFoodCompanyRequest foodCompanyRequest, UUID id){
+        return FoodCompany.builder()
+                .id(id)
+                .name(foodCompanyRequest.getName())
+                .nip(foodCompanyRequest.getNip())
+                .isPolish(foodCompanyRequest.isPolish())
+                .build();
+    }
 }

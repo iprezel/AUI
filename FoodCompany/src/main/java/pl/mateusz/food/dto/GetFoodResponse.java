@@ -1,5 +1,6 @@
 package pl.mateusz.food.dto;
 import lombok.*;
+import pl.mateusz.food.Food;
 
 import java.util.UUID;
 
@@ -22,10 +23,19 @@ public class GetFoodResponse {
         private String name;
     }
 
-
     private UUID id;
     private String name;
     private int price;
     private int quantity;
     private FoodCompany foodCompany;
+
+    public static GetFoodResponse from(Food food){
+        return GetFoodResponse.builder()
+                .id(food.getId())
+                .name(food.getName())
+                .price(food.getPrice())
+                .quantity(food.getQuantity())
+                .foodCompany(FoodCompany.builder().id(food.getFoodCompany().getId()).name(food.getFoodCompany().getName()).build())
+                .build();
+    }
 }

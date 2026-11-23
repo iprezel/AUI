@@ -39,4 +39,5 @@ public class Food implements Comparable<Food>, Serializable {
         if (result == 0) result = this.foodCompany.compareTo(other.foodCompany);
         return result;
     }
+
 }
