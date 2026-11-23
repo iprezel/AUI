@@ -83,7 +83,7 @@ GET {{gateway}}/api/foods/{{missingId}}
 ### Pobranie produktów jednej firmy → 200
 GET {{gateway}}/api/companies/{{legsadId}}/foods
 
-### Pobranie produktów pustej firmy (Wedel nie ma produktów) → 200 z pustą listą
+### Pobranie produktów pustej firmy (Wedel nie ma produktów): firma istnieje w food-service dzieki event CREATE → 200 z pustą listą
 GET {{gateway}}/api/companies/{{wedelId}}/foods
 
 ### Pobranie produktów nieistniejącej firmy → 404
@@ -139,7 +139,7 @@ GET {{gateway}}/api/foods/{{chocolateId}}
 
 
 #######################################################################
-# USUWANIE FIRM (kaskadowo z produktami)
+# USUWANIE FIRM (kaskadowo z produktami): w bazie food-service produkty sa usuwane dzieki event DELETE
 #######################################################################
 
 ### Usunięcie firmy Legsad razem z jej produktami → 204
